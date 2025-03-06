@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI CV Matcher</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <header>
+            <nav class="flex justify-between items-center py-6">
+                <div class="text-2xl font-bold text-gray-800 dark:text-white">AI CV Matcher</div>
+                <div class="flex items-center space-x-8">
+                    <ul class="flex space-x-8">
+                        <li><a href="#home" class="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors">Home</a></li>
+                        <li><a href="#about" class="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors">About</a></li>
+                        <li><a href="#contact" class="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors">Contact</a></li>
+                    </ul>
+                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition-colors">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-300"></i>
+                    </button>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+            <section class="text-center py-16">
+                <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-6 leading-tight">Match the Right Talent with AI Precision</h1>
+                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Upload job descriptions and CVs to find the perfect match using advanced AI technology</p>
+            </section>
+
+            <section class="py-12">
+                <div class="flex flex-col md:flex-row justify-center gap-8 mb-8">
+                    <div id="jdUpload" class="bg-white dark:bg-gray-800 p-10 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all hover:-translate-y-1 cursor-pointer text-center w-full md:w-80">
+                        <i class="fas fa-file-alt text-5xl text-blue-500 dark:text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Upload Job Description</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Drop your JD here or click to browse</p>
+                        <input type="file" id="jdInput" accept=".pdf,.txt,.rtf,.docx" class="hidden">
+                    </div>
+                    
+                    <div id="cvUpload" class="bg-white dark:bg-gray-800 p-10 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all hover:-translate-y-1 cursor-pointer text-center w-full md:w-80">
+                        <i class="fas fa-file-upload text-5xl text-blue-500 dark:text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Upload CVs</h3>
+                        <p class="text-gray-600 dark:text-gray-400 text-sm">Drop CV files here or click to browse</p>
+                        <input type="file" id="cvInput" accept=".pdf,.txt,.rtf,.docx" multiple class="hidden">
+                    </div>
+                </div>
+                <button id="matchButton" class="block mx-auto px-8 py-4 bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                    Match Candidates
+                </button>
+            </section>
+
+            <section class="py-16">
+                <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center mb-12">Key Features</h2>
+                <div class="grid md:grid-cols-3 gap-8 px-4">
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:-translate-y-1 transition-transform">
+                        <i class="fas fa-robot text-4xl text-blue-500 dark:text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">AI-Powered Matching</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Advanced algorithms for precise candidate matching</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:-translate-y-1 transition-transform">
+                        <i class="fas fa-bolt text-4xl text-blue-500 dark:text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Quick Results</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Get matched results in seconds</p>
+                    </div>
+                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:-translate-y-1 transition-transform">
+                        <i class="fas fa-chart-bar text-4xl text-blue-500 dark:text-blue-400 mb-4"></i>
+                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Smart Analytics</h3>
+                        <p class="text-gray-600 dark:text-gray-400">Detailed matching scores and insights</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center py-6 text-gray-600 dark:text-gray-400">
+            <p>&copy; 2024 AI CV Matcher. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> 

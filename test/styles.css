@@ -57,6 +57,13 @@ nav {
     font-weight: 600;
     font-family: 'Montserrat';
     letter-spacing: -0.5px;
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
+}
+
+.logo:hover {
+    opacity: 0.8;
 }
 
 .logo img {

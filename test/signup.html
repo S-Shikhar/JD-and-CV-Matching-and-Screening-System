@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - JD - CV ANALYSER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="signup.css">
+</head>
+
+<body>
+    <div class="logo">
+        <img src="assets/images/briefcase-search.svg" alt="Logo">
+        <span>JD - CV ANALYSER</span>
+    </div>
+
+    <main class="signup-container">
+        <div class="signup-box">
+            <a href="index.html" class="back-button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M19 12H5M5 12L12 19M5 12L12 5" stroke="white" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                </svg>
+            </a>
+
+            <div class="toggle-container">
+                <button class="toggle-btn active" data-form="employer">Employer</button>
+                <button class="toggle-btn" data-form="employee">Employee</button>
+                <div class="toggle-slider"></div>
+            </div>
+
+            <div class="forms-container">
+                <!-- Employer Form -->
+                <form class="signup-form employer-form active">
+                    <h1>Create your account to<br>find your best employees</h1>
+                    <input type="text" placeholder="Company Name" required>
+                    <input type="email" placeholder="Business Email" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit">Create Employer Account</button>
+                    <p class="login-link">Already have an account? <a href="login.html">Login</a></p>
+                </form>
+
+                <!-- Employee Form -->
+                <form class="signup-form employee-form">
+                    <h1>Create your account to<br>find your dream job</h1>
+                    <input type="text" placeholder="Full Name" required>
+                    <input type="email" placeholder="Email Address" required>
+                    <input type="password" placeholder="Password" required>
+                    <button type="submit">Create Employee Account</button>
+                    <p class="login-link">Already have an account? <a href="login.html">Login</a></p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="signup.js"></script>
+</body>
+
+</html>

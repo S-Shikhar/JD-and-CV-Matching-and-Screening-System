@@ -1,0 +1,72 @@
+<div class="container" id="container">
+    <div class="form-container sign-up">
+        <form action="templates/login_page.php" method="POST">
+            <h1 class="u">User login</h1>
+            <span>Enter your details</span>
+            <br>
+
+            <input type="hidden" name="role" value="user">
+
+            <div class="mb-2">
+                <label for="employeeId" class="form-label">Employee ID</label>
+                <input name="eid" type="text" class="form-control employeeId" placeholder="Enter Employee ID" required>
+                <div class="blocked" style="color: rgb(189, 189, 189) !important;">Enter Employee ID</div>
+            </div>
+
+            <div class="mb-2">
+                <label for="password" class="form-label">Password</label>
+                <input name="password" type="password" class="form-control password" placeholder="Enter Password"
+                    required>
+                <div class="blocked" style="color: rgb(189, 189, 189) !important;">Enter Password</div>
+            </div>
+            <a href="templates/forgot_pass.php">Forgot Password?</a>
+        </form>
+    </div>
+
+    <div class="form-container sign-in">
+        <form action="templates/login_page.php" method="POST">
+            <h1 class="u">Admin login</h1>
+            <span>Enter Your details</span>
+            <br>
+
+            <input type="hidden" name="role" value="admin">
+
+            <div class="mb-2">
+                <label for="employeeId" class="form-label">Employee ID</label>
+                <input name="eid" type="text" class="form-control employeeId" placeholder="Enter Employee ID" required>
+                <div class="blocked" style="color: rgb(189, 189, 189) !important;">Enter Employee ID</div>
+            </div>
+
+            <div class="mb-2">
+                <label for="password" class="form-label">Password</label>
+                <input name="password" type="password" class="form-control password" placeholder="Enter Password"
+                    required>
+                <div class="blocked" style="color: rgb(189, 189, 189) !important;">Enter Password</div>
+            </div>
+
+
+    </div>
+
+
+</div>
+<a href="templates/forgot_pass.php">Forgot Password?</a>
+</form>
+</div>
+
+<div class="toggle-container">
+    <div class="toggle">
+        <div class="toggle-panel toggle-left">
+            <img src="assets/images/image.png" alt="ofac-image">
+            <!-- <h1>Hello Users</h1>
+                <p>Enter your details to login!</p> -->
+            <button class="hidden" id="login">Admin Login</button>
+        </div>
+        <div class="toggle-panel toggle-right">
+            <img src="assets/images/image.png" alt="ofac-image">
+            <!-- <h1>Welcome Back</h1>
+                <p>Sign-in to access the OFAC portal!</p> -->
+            <button class="hidden" id="register">User Login</button>
+        </div>
+    </div>
+</div>
+</div>

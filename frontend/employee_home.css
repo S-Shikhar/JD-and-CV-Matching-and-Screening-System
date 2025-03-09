@@ -1,0 +1,238 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: radial-gradient(circle 728px at 12% 6%,
+            rgba(30, 40, 100, 0.6) 0%,
+            rgba(3, 4, 18, 0) 60%),
+        radial-gradient(circle 1500px at 90% 80%,
+            rgba(49, 60, 122, 0.6) 0%,
+            rgba(7, 9, 37, 0) 60%),
+        #030412;
+    color: white;
+    display: flex;
+}
+
+.sidebar {
+    width: 80px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(10px);
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+}
+
+.sidebar .logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    flex-grow: 1;
+}
+
+.nav-links a, .logout {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.nav-links a:hover, .logout:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links a.active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-links svg, .logout svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.nav-links a:hover svg,
+.nav-links a.active svg,
+.logout:hover svg {
+    opacity: 1;
+}
+
+main {
+    flex-grow: 1;
+    padding: 2rem;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+.search-bar {
+    flex-grow: 1;
+    position: relative;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 1rem 3rem 1rem 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+}
+
+.search-bar button {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.notifications, .profile {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.content h1 {
+    font-size: 2rem;
+    font-weight: 500;
+    margin-bottom: 2rem;
+}
+
+.upload-section {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.upload-box {
+    flex: 1;
+}
+
+.upload-area {
+    border: 2px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.upload-area:hover {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.upload-area img {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 1rem;
+}
+
+.upload-area h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.upload-area p {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.results-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.search-bar button svg,
+.notifications svg {
+    width: 24px;
+    height: 24px;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.search-bar button:hover svg,
+.notifications:hover svg {
+    opacity: 1;
+}
+
+.profile svg {
+    width: 40px;
+    height: 40px;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+.profile:hover svg {
+    opacity: 1;
+}
+
+.profile-completion {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.profile-completion h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.completion-tasks {
+    list-style: none;
+    margin-top: 1.5rem;
+}
+
+.completion-tasks li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.completion-tasks li.completed::before {
+    content: '✓';
+    color: #4CAF50;
+    margin-right: 0.5rem;
+}
+
+.completion-tasks li.pending {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.completion-tasks li.pending::before {
+    content: '×';
+    color: rgba(255, 255, 255, 0.4);
+    margin-right: 0.5rem;
+}

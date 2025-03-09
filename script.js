@@ -1,123 +1,196 @@
-document.addEventListener('DOMContentLoaded', function() {
-    const jdUpload = document.getElementById('jdUpload');
-    const cvUpload = document.getElementById('cvUpload');
-    const jdInput = document.getElementById('jdInput');
-    const cvInput = document.getElementById('cvInput');
-    const matchButton = document.getElementById('matchButton');
-    const darkModeToggle = document.getElementById('darkModeToggle');
-
-    // Dark mode initialization
-    initializeDarkMode();
-
-    // Dark mode toggle
-    darkModeToggle.addEventListener('click', () => {
-        document.documentElement.classList.toggle('dark');
-        // Save preference to localStorage
-        localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+// File Upload Handling
+document.addEventListener('DOMContentLoaded', () => {
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
     });
 
-    // Handle drag and drop events for JD
-    setupDragAndDrop(jdUpload, jdInput, 'JD');
-
-    // Handle drag and drop events for CVs
-    setupDragAndDrop(cvUpload, cvInput, 'CV');
-
-    // Click events for upload boxes
-    jdUpload.addEventListener('click', () => jdInput.click());
-    cvUpload.addEventListener('click', () => cvInput.click());
-
-    // File input change events
-    jdInput.addEventListener('change', (e) => handleFileSelect(e, 'JD'));
-    cvInput.addEventListener('change', (e) => handleFileSelect(e, 'CV'));
-
-    // Match button click event
-    matchButton.addEventListener('click', handleMatch);
-});
-
-function initializeDarkMode() {
-    // Check for saved user preference, default to light mode if not found
-    const darkMode = localStorage.getItem('darkMode');
+    const jdUploadArea = document.getElementById('jdUploadArea');
+    const cvUploadArea = document.getElementById('cvUploadArea');
+    const jdFileInput = document.getElementById('jdFileInput');
+    const cvFileInput = document.getElementById('cvFileInput');
+    const scoreButton = document.getElementById('seeScore');
+    const trialsLeftElement = document.getElementById('trialsLeft');
     
-    // Check if user has dark mode preference in their system
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (darkMode === 'true' || (darkMode === null && prefersDark)) {
-        document.documentElement.classList.add('dark');
-    } else {
-        document.documentElement.classList.remove('dark');
+    let jdFile = null;
+    let cvFile = null;
+
+    // Initialize trials count from localStorage or set to 3 if not exists
+    let trialsLeft = parseInt(localStorage.getItem('trialsLeft')) || 3;
+    trialsLeftElement.textContent = trialsLeft;
+
+    // Check if trials are exhausted and disable upload areas
+    function checkTrialsAndUpdateUI() {
+        if (trialsLeft <= 0) {
+            jdUploadArea.classList.add('disabled');
+            cvUploadArea.classList.add('disabled');
+            scoreButton.disabled = true;
+            trialsLeftElement.parentElement.textContent = 'No trials left. Please sign up to continue.';
+            
+            // Remove event listeners when trials are exhausted
+            jdUploadArea.removeEventListener('click', handleJdClick);
+            cvUploadArea.removeEventListener('click', handleCvClick);
+            jdFileInput.removeEventListener('change', handleJdChange);
+            cvFileInput.removeEventListener('change', handleCvChange);
+            
+            // Remove drag and drop listeners
+            [jdUploadArea, cvUploadArea].forEach(area => {
+                area.removeEventListener('dragover', handleDragOver);
+                area.removeEventListener('dragleave', handleDragLeave);
+                area.removeEventListener('drop', handleDrop);
+            });
+        }
     }
-}
 
-function setupDragAndDrop(dropZone, fileInput, type) {
-    ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, preventDefaults, false);
-    });
+    // Function to handle file selection
+    function handleFileSelect(file, type) {
+        if (trialsLeft <= 0) {
+            alert('No trials left. Please sign up to continue.');
+            return false;
+        }
 
-    function preventDefaults(e) {
+        const allowedTypes = [
+            'application/pdf',
+            'text/plain',
+            'application/rtf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+
+        if (!allowedTypes.includes(file.type)) {
+            alert('Please upload a PDF, TXT, RTF, or DOCX file.');
+            return false;
+        }
+
+        if (type === 'jd') {
+            jdFile = file;
+            jdUploadArea.querySelector('p').textContent = file.name;
+        } else {
+            cvFile = file;
+            cvUploadArea.querySelector('p').textContent = file.name;
+        }
+
+        // Enable score button if both files are uploaded
+        scoreButton.disabled = !(jdFile && cvFile);
+        return true;
+    }
+
+    // Event handler functions
+    function handleJdClick() {
+        if (trialsLeft > 0) jdFileInput.click();
+    }
+
+    function handleCvClick() {
+        if (trialsLeft > 0) cvFileInput.click();
+    }
+
+    function handleJdChange(e) {
+        if (e.target.files.length) {
+            handleFileSelect(e.target.files[0], 'jd');
+        }
+    }
+
+    function handleCvChange(e) {
+        if (e.target.files.length) {
+            handleFileSelect(e.target.files[0], 'cv');
+        }
+    }
+
+    function handleDragOver(e) {
+        if (trialsLeft > 0) {
+            e.preventDefault();
+            e.currentTarget.classList.add('drag-over');
+        }
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e) {
         e.preventDefault();
-        e.stopPropagation();
+        e.currentTarget.classList.remove('drag-over');
+        
+        if (trialsLeft > 0) {
+            const file = e.dataTransfer.files[0];
+            const type = e.currentTarget.id === 'jdUploadArea' ? 'jd' : 'cv';
+            handleFileSelect(file, type);
+        }
     }
 
-    ['dragenter', 'dragover'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.remove('border-gray-300', 'dark:border-gray-600');
-            dropZone.classList.add('border-blue-500', 'dark:border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/50');
-        });
+    // Click handlers for upload areas
+    jdUploadArea.addEventListener('click', handleJdClick);
+    cvUploadArea.addEventListener('click', handleCvClick);
+
+    // File input change handlers
+    jdFileInput.addEventListener('change', handleJdChange);
+    cvFileInput.addEventListener('change', handleCvChange);
+
+    // Drag and drop handlers
+    [jdUploadArea, cvUploadArea].forEach(area => {
+        area.addEventListener('dragover', handleDragOver);
+        area.addEventListener('dragleave', handleDragLeave);
+        area.addEventListener('drop', handleDrop);
     });
 
-    ['dragleave', 'drop'].forEach(eventName => {
-        dropZone.addEventListener(eventName, () => {
-            dropZone.classList.remove('border-blue-500', 'dark:border-blue-400', 'bg-blue-50', 'dark:bg-blue-900/50');
-            dropZone.classList.add('border-gray-300', 'dark:border-gray-600');
-        });
+    // Score button click handler
+    scoreButton.addEventListener('click', async () => {
+        if (!jdFile || !cvFile) return;
+
+        try {
+            // Create FormData and append files
+            const formData = new FormData();
+            formData.append('jobDescription', jdFile);
+            formData.append('resume', cvFile);
+
+            // Show loading state
+            scoreButton.disabled = true;
+            scoreButton.textContent = 'Analyzing...';
+
+            // Send files to backend
+            const response = await fetch('/api/analyze', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) throw new Error('Analysis failed');
+
+            const result = await response.json();
+            
+            // Decrease trials count and update localStorage
+            trialsLeft--;
+            localStorage.setItem('trialsLeft', trialsLeft);
+            
+            // Update UI
+            if (trialsLeft > 0) {
+                trialsLeftElement.textContent = trialsLeft;
+            }
+            
+            // Check if trials are exhausted
+            checkTrialsAndUpdateUI();
+
+            // Navigate to results page or show modal with results
+            window.location.href = `/results?id=${result.analysisId}`;
+
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred during analysis. Please try again.');
+        } finally {
+            scoreButton.disabled = false;
+            scoreButton.textContent = 'See Your Score';
+        }
     });
 
-    dropZone.addEventListener('drop', (e) => {
-        const dt = e.dataTransfer;
-        const files = dt.files;
-        fileInput.files = files;
-        handleFileSelect({ target: fileInput }, type);
-    });
-}
-
-function handleFileSelect(e, type) {
-    const files = Array.from(e.target.files);
-    const allowedTypes = [
-        'application/pdf',
-        'text/plain',
-        'application/rtf',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-    ];
-
-    const validFiles = files.filter(file => allowedTypes.includes(file.type));
-    
-    if (validFiles.length !== files.length) {
-        alert('Please upload only PDF, TXT, RTF, or DOCX files.');
-        return;
-    }
-
-    // Update UI to show selected files
-    const uploadBox = type === 'JD' ? document.getElementById('jdUpload') : document.getElementById('cvUpload');
-    const fileCount = validFiles.length;
-    const fileText = uploadBox.querySelector('p');
-    
-    if (fileCount > 0) {
-        fileText.textContent = `${fileCount} file${fileCount > 1 ? 's' : ''} selected`;
-        uploadBox.classList.remove('border-gray-300', 'dark:border-gray-600');
-        uploadBox.classList.add('border-green-500', 'dark:border-green-400', 'bg-green-50', 'dark:bg-green-900/50');
-    }
-}
-
-function handleMatch() {
-    const jdFiles = document.getElementById('jdInput').files;
-    const cvFiles = document.getElementById('cvInput').files;
-
-    if (jdFiles.length === 0 || cvFiles.length === 0) {
-        alert('Please upload both a Job Description and at least one CV.');
-        return;
-    }
-
-    // Here you would implement the actual matching logic
-    // For now, we'll just show a success message
-    alert('Processing files... This feature will be implemented soon!');
-} 
+    // Check trials status on page load
+    checkTrialsAndUpdateUI();
+}); 

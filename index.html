@@ -1,89 +1,178 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI CV Matcher</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class'
-        }
-    </script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>JD - CV ANALYSER</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=PT+Sans+Narrow:wght@400;700&family=Paprika&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <header>
-            <nav class="flex justify-between items-center py-6">
-                <div class="text-2xl font-bold text-gray-800 dark:text-white">AI CV Matcher</div>
-                <div class="flex items-center space-x-8">
-                    <ul class="flex space-x-8">
-                        <li><a href="#home" class="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors">Home</a></li>
-                        <li><a href="#about" class="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors">About</a></li>
-                        <li><a href="#contact" class="text-gray-700 hover:text-blue-500 dark:text-gray-300 dark:hover:text-blue-400 font-medium transition-colors">Contact</a></li>
-                    </ul>
-                    <button id="darkModeToggle" class="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 transition-colors">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block text-yellow-300"></i>
-                    </button>
+
+<body>
+    <nav>
+        <a href="#home" class="logo">
+            <img src="assets/images/briefcase-search.svg" alt="Logo">
+            JD - CV ANALYSER
+        </a>
+        <div class="nav-links">
+            <a href="#home">Home</a>
+            <a href="#plans">Plans</a>
+            <a href="#about">About us</a>
+            <a href="#contact">Contact us</a>
+            <a href="signup.html">Signup</a>
+        </div>
+    </nav>
+
+    <main>
+        <div class="hero" id="home">
+            <h1><span class="sparkle sparkle-start"><img src="assets/images/sparkle.svg" alt="sparkle"></span>Land Your
+                Dream Job
+                Faster.</h1>
+            <h2>We Analyse, You Apply.<span class="sparkle sparkle-end"><img src="assets/images/sparkle.svg"
+                        alt="sparkle"></span>
+            </h2>
+            <div class="buttons">
+                <a href="#try-section" class="btn btn-primary">Try Now</a>
+                <a href="#start" class="btn btn-secondary">Get Started</a>
+            </div>
+        </div>
+
+        <div class="features">
+            <div class="features-content">
+                <h2 class="features-title">The Ultimate Hiring & Job Matching Solution!<br>No More Guesswork—Just the
+                    Right Fit!</h2>
+                <ul class="features-list">
+                    <li>AI-driven analysis ensures you find candidates who truly fit the role.</li>
+                    <li>Get ranked for roles where your skills shine the brightest.</li>
+                    <li>Objective matching based on qualifications, experience, and job expectations.</li>
+                </ul>
+            </div>
+            <div class="features-illustration">
+                <img src="assets/images/Perfect candidate's cv found.png" alt="Resume Analysis Illustration">
+            </div>
+        </div>
+
+        <!-- Try Before Signup Section -->
+        <section class="try-before-signup" id="try-section">
+            <div class="container">
+                <h2>Try It Before Signing Up!</h2>
+                <p class="subtitle">Upload job descriptions and CVs to find the perfect match using advanced AI
+                    technology</p>
+
+                <div class="upload-containers">
+                    <div class="upload-box">
+                        <div class="upload-area" id="jdUploadArea">
+                            <img src="assets/images/document-icon.svg" alt="Document Icon">
+                            <h3>Upload Job Description</h3>
+                            <p>Drop your JD here or click to browse</p>
+                            <input type="file" id="jdFileInput" accept=".pdf,.txt,.rtf,.docx" hidden>
+                        </div>
+                    </div>
+
+                    <div class="upload-box">
+                        <div class="upload-area" id="cvUploadArea">
+                            <img src="assets/images/upload-icon.svg" alt="Upload Icon">
+                            <h3>Upload Your CV</h3>
+                            <p>Drop your CV here or click to browse</p>
+                            <input type="file" id="cvFileInput" accept=".pdf,.txt,.rtf,.docx" hidden>
+                        </div>
+                    </div>
                 </div>
-            </nav>
-        </header>
 
-        <main>
-            <section class="text-center py-16">
-                <h1 class="text-5xl font-bold text-gray-800 dark:text-white mb-6 leading-tight">Match the Right Talent with AI Precision</h1>
-                <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Upload job descriptions and CVs to find the perfect match using advanced AI technology</p>
-            </section>
+                <button id="seeScore" class="score-button" disabled>See Your Score</button>
 
-            <section class="py-12">
-                <div class="flex flex-col md:flex-row justify-center gap-8 mb-8">
-                    <div id="jdUpload" class="bg-white dark:bg-gray-800 p-10 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all hover:-translate-y-1 cursor-pointer text-center w-full md:w-80">
-                        <i class="fas fa-file-alt text-5xl text-blue-500 dark:text-blue-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Upload Job Description</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">Drop your JD here or click to browse</p>
-                        <input type="file" id="jdInput" accept=".pdf,.txt,.rtf,.docx" class="hidden">
+                <p class="trials-text">You have <span id="trialsLeft">3</span> trials left before you need to signup</p>
+            </div>
+        </section>
+
+        <!-- Process Section -->
+        <section class="process">
+            <h2>JD-CV Analyser is a free and fast AI tool that analyses your CV against a JD in under 1.5 minutes.</h2>
+            <div class="process-steps">
+                <div class="step">
+                    <img src="assets/images/upload-step-icon.svg" alt="Upload">
+                    <h3>Upload</h3>
+                </div>
+                <div class="step">
+                    <img src="assets/images/analyse-icon.svg" alt="Analyse">
+                    <h3>Analyse</h3>
+                </div>
+                <div class="step">
+                    <img src="assets/images/compare-icon.svg" alt="Compare">
+                    <h3>Compare</h3>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section class="team" id="about">
+            <h2>Our Team</h2>
+            <div class="team-members">
+                <div class="member">
+                    <div class="member-image">
+                        <img src="assets/images/team/baibhab.jpg" alt="Baibhab Adhikari">
                     </div>
-                    
-                    <div id="cvUpload" class="bg-white dark:bg-gray-800 p-10 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all hover:-translate-y-1 cursor-pointer text-center w-full md:w-80">
-                        <i class="fas fa-file-upload text-5xl text-blue-500 dark:text-blue-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-2">Upload CVs</h3>
-                        <p class="text-gray-600 dark:text-gray-400 text-sm">Drop CV files here or click to browse</p>
-                        <input type="file" id="cvInput" accept=".pdf,.txt,.rtf,.docx" multiple class="hidden">
+                    <h3>Baibhab Adhikari</h3>
+                    <p>Backend Engineer</p>
+                </div>
+                <div class="member">
+                    <div class="member-image">
+                        <img src="assets/images/team/garima.jpg" alt="Garima Roy">
+                    </div>
+                    <h3>Garima Roy</h3>
+                    <p>Data Analyst</p>
+                </div>
+                <div class="member">
+                    <div class="member-image">
+                        <img src="assets/images/team/souharda.jpg" alt="Souhardha Shikhar Biswas">
+                    </div>
+                    <h3>Souharda Shikhar Biswas</h3>
+                    <p>Full Stack Developer</p>
+                </div>
+                <div class="member">
+                    <div class="member-image">
+                        <img src="assets/images/team/leeza.jpg" alt="Leeza Bhowal">
+                    </div>
+                    <h3>Leeza Bhowal</h3>
+                    <p>UI / UX Designer</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer Section -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-cta">
+                    <h2>Ready to land your dream job?</h2>
+                    <div class="footer-buttons">
+                        <a href="#try-section" class="btn btn-primary">Try Now</a>
+                        <a href="#start" class="btn btn-secondary">Get Started</a>
                     </div>
                 </div>
-                <button id="matchButton" class="block mx-auto px-8 py-4 bg-blue-500 dark:bg-blue-600 hover:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-                    Match Candidates
-                </button>
-            </section>
-
-            <section class="py-16">
-                <h2 class="text-3xl font-bold text-gray-800 dark:text-white text-center mb-12">Key Features</h2>
-                <div class="grid md:grid-cols-3 gap-8 px-4">
-                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:-translate-y-1 transition-transform">
-                        <i class="fas fa-robot text-4xl text-blue-500 dark:text-blue-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">AI-Powered Matching</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Advanced algorithms for precise candidate matching</p>
+                <div class="footer-bottom">
+                    <div class="footer-logo">
+                        <img src="assets/images/briefcase-search.svg" alt="Logo">
+                        <span>JD - CV ANALYSER</span>
                     </div>
-                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:-translate-y-1 transition-transform">
-                        <i class="fas fa-bolt text-4xl text-blue-500 dark:text-blue-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Quick Results</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Get matched results in seconds</p>
-                    </div>
-                    <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:-translate-y-1 transition-transform">
-                        <i class="fas fa-chart-bar text-4xl text-blue-500 dark:text-blue-400 mb-4"></i>
-                        <h3 class="text-xl font-semibold text-gray-800 dark:text-white mb-3">Smart Analytics</h3>
-                        <p class="text-gray-600 dark:text-gray-400">Detailed matching scores and insights</p>
+                    <div class="footer-links">
+                        <div class="footer-links-column">
+                            <a href="#plans">Plans</a>
+                            <a href="#about">About us</a>
+                            <a href="#contact">Contact us</a>
+                        </div>
+                        <div class="footer-links-column">
+                            <a href="#terms">Terms and conditions</a>
+                            <a href="#privacy">Privacy policy</a>
+                        </div>
                     </div>
                 </div>
-            </section>
-        </main>
-
-        <footer class="text-center py-6 text-gray-600 dark:text-gray-400">
-            <p>&copy; 2024 AI CV Matcher. All rights reserved.</p>
+            </div>
         </footer>
-    </div>
+    </main>
     <script src="script.js"></script>
 </body>
-</html> 
+
+</html>

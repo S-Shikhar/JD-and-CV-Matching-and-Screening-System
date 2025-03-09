@@ -16,18 +16,25 @@ html {
     scrollbar-width: none;
     /* Firefox */
     scroll-behavior: smooth;
-    scroll-padding-top: 100px; /* Add padding for fixed nav */
+    scroll-padding-top: 100px;
+    /* Add padding for fixed nav */
 }
 
 body {
     min-height: 100vh;
     background:
-        radial-gradient(circle at 10% 30%,
+        radial-gradient(circle 728px at 12% 6%,
             rgba(30, 40, 100, 0.6) 0%,
             rgba(3, 4, 18, 0) 60%),
-        radial-gradient(circle at 90% 70%,
+        radial-gradient(circle 1200px at 90% 18%,
+            rgba(49, 60, 122, 0.6) 0%,
+            rgba(7, 9, 37, 0) 60%),
+        radial-gradient(ellipse 800px 500px at 50% 45%,
             rgba(30, 40, 100, 0.6) 0%,
             rgba(3, 4, 18, 0) 60%),
+        radial-gradient(circle 1500px at 50% 86%,
+            rgba(49, 60, 122, 0.6) 0%,
+            rgba(7, 9, 37, 0) 60%),
         #030412;
     font-family: Arial, sans-serif;
     color: white;
@@ -230,11 +237,11 @@ main {
 
 .features-illustration img {
     width: 100%;
-    max-width: 500px;
+    max-width: 1000px;
     height: auto;
 }
 
-@media (max-width: 768px) {
+/* @media (max-width: 768px) {
     .features {
         flex-direction: column;
         text-align: center;
@@ -248,7 +255,7 @@ main {
     .features-title {
         font-size: 2rem;
     }
-}
+} */
 
 /* Process Section */
 .process {
@@ -260,6 +267,9 @@ main {
     padding: 4rem 2rem;
     background: rgba(3, 4, 18, 0.5);
     text-align: center;
+    background-color: #1B3162; 
+    padding: 0px 0px 0px 0px;
+    margin: 0px 0px 0px 0px;
 }
 
 .process h2 {
@@ -628,4 +638,4 @@ main {
     .footer-links-column {
         align-items: center;
     }
-} 
+}

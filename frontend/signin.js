@@ -26,9 +26,7 @@ toggleBtns.forEach(btn => {
 });
 
 // API URL
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? 'http://localhost:8000' 
-    : '';
+const API_URL = 'https://ats-eureka-ec04bc99ad36.herokuapp.com/api';
 
 // Helper function to store token in localStorage
 function storeAuthToken(token, userType) {
@@ -50,7 +48,7 @@ employerSigninForm.addEventListener('submit', async (e) => {
     employerErrorMessage.textContent = '';
     
     try {
-        const response = await fetch(`${API_URL}/api/token`, {
+        const response = await fetch(`${API_URL}/token`, {
             method: 'POST',
             body: formData
         });
@@ -86,7 +84,7 @@ employeeSigninForm.addEventListener('submit', async (e) => {
     employeeErrorMessage.textContent = '';
     
     try {
-        const response = await fetch(`${API_URL}/api/token`, {
+        const response = await fetch(`${API_URL}/token`, {
             method: 'POST',
             body: formData
         });

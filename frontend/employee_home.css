@@ -80,43 +80,73 @@ main {
 header {
     display: flex;
     align-items: center;
-    gap: 2rem;
-    margin-bottom: 3rem;
+    gap: 1rem;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .search-bar {
-    flex-grow: 1;
-    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
 }
 
 .search-bar input {
-    width: 100%;
-    padding: 1rem 3rem 1rem 1.5rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
+    flex: 1;
+    background: transparent;
+    border: none;
     color: white;
     font-size: 1rem;
+    outline: none;
+}
+
+.search-bar input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .search-bar button {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
+    background: transparent;
     border: none;
     cursor: pointer;
+    padding: 0;
 }
 
 .notifications, .profile {
-    width: 40px;
-    height: 40px;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.notifications:hover, .profile:hover {
+    opacity: 0.8;
+}
+
+/* Add styles for the logout button in header */
+.logout {
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+    padding: 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 1rem;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logout:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(1.05);
+}
+
+.logout svg {
+    width: 24px;
+    height: 24px;
 }
 
 .content h1 {
@@ -543,4 +573,49 @@ header {
     line-height: 1.6;
     color: #d0d0d0;
     margin-bottom: 5px;
+}
+
+/* Welcome message styles */
+.welcome-message {
+    text-align: center;
+    margin: 2rem 0 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.5s ease-out;
+}
+
+.welcome-message h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(90deg, #4776E6 0%, #8E54E9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.welcome-message p {
+    font-size: 1.1rem;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Update content section padding */
+.content {
+    padding: 0 2rem;
 }

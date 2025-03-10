@@ -1,7 +1,5 @@
 // Define API_URL at the global scope
-const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-    ? 'http://localhost:8000' 
-    : '';
+const API_URL = 'https://ats-eureka-ec04bc99ad36.herokuapp.com/api';
 
 document.addEventListener('DOMContentLoaded', () => {
     // Check if user is authenticated
@@ -264,7 +262,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 const authToken = localStorage.getItem('authToken');
                 
-                const response = await fetch(`${API_URL}/api/employer`, {
+                const response = await fetch(`${API_URL}/employer`, {
                     method: 'POST',
                     headers: {
                         'Authorization': `Bearer ${authToken}`

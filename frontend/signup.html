@@ -32,21 +32,29 @@
 
             <div class="forms-container">
                 <!-- Employer Form -->
-                <form class="signup-form employer-form active">
+                <form id="employer-signup-form" class="signup-form employer-form active">
                     <h1>Create your account to<br>find your best employees</h1>
-                    <input type="text" placeholder="Company Name" required>
-                    <input type="email" placeholder="Business Email" required>
-                    <input type="password" placeholder="Password" required>
+                    <input type="text" id="company-name" name="company_name" placeholder="Company Name" required>
+                    <input type="email" id="business-email" name="business_email" placeholder="Business Email" required>
+                    <input type="password" id="employer-password" name="password" placeholder="Password" required
+                        minlength="8">
+                    <input type="password" id="employer-confirm-password" name="confirm_password"
+                        placeholder="Confirm Password" required minlength="8">
+                    <div id="employer-error-message" class="error-message"></div>
                     <button type="submit">Create Employer Account</button>
                     <p class="login-link">Already have an account? <a href="signin.html">Signin</a></p>
                 </form>
 
                 <!-- Employee Form -->
-                <form class="signup-form employee-form">
+                <form id="employee-signup-form" class="signup-form employee-form">
                     <h1>Create your account to<br>find your dream job</h1>
-                    <input type="text" placeholder="Full Name" required>
-                    <input type="email" placeholder="Email Address" required>
-                    <input type="password" placeholder="Password" required>
+                    <input type="text" id="full-name" name="full_name" placeholder="Full Name" required>
+                    <input type="email" id="email" name="email" placeholder="Email Address" required>
+                    <input type="password" id="employee-password" name="password" placeholder="Password" required
+                        minlength="8">
+                    <input type="password" id="employee-confirm-password" name="confirm_password"
+                        placeholder="Confirm Password" required minlength="8">
+                    <div id="employee-error-message" class="error-message"></div>
                     <button type="submit">Create Employee Account</button>
                     <p class="login-link">Already have an account? <a href="signin.html">Signin</a></p>
                 </form>

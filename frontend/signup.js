@@ -3,6 +3,7 @@ const slider = document.querySelector('.toggle-slider');
 const employerForm = document.querySelector('.employer-form');
 const employeeForm = document.querySelector('.employee-form');
 
+// Toggle between employer and employee forms
 toggleBtns.forEach(btn => {
     btn.addEventListener('click', () => {
         // Update toggle buttons
@@ -22,4 +23,111 @@ toggleBtns.forEach(btn => {
             employerForm.classList.add('active');
         }
     });
+});
+
+// API URL
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+    ? 'http://localhost:8000' 
+    : '';
+
+// Employer signup form submission
+const employerSignupForm = document.getElementById('employer-signup-form');
+const employerErrorMessage = document.getElementById('employer-error-message');
+
+employerSignupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Get form data
+    const companyName = document.getElementById('company-name').value;
+    const businessEmail = document.getElementById('business-email').value;
+    const password = document.getElementById('employer-password').value;
+    const confirmPassword = document.getElementById('employer-confirm-password').value;
+    
+    // Validate passwords match
+    if (password !== confirmPassword) {
+        employerErrorMessage.textContent = 'Passwords do not match';
+        return;
+    }
+    
+    // Clear previous error messages
+    employerErrorMessage.textContent = '';
+    
+    try {
+        const response = await fetch(`${API_URL}/api/register/employer`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                company_name: companyName,
+                business_email: businessEmail,
+                password: password,
+                confirm_password: confirmPassword
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.detail || 'Registration failed');
+        }
+        
+        // Registration successful - redirect to signin
+        alert('Registration successful! Please sign in.');
+        window.location.href = 'signin.html';
+        
+    } catch (error) {
+        employerErrorMessage.textContent = error.message;
+    }
+});
+
+// Employee signup form submission
+const employeeSignupForm = document.getElementById('employee-signup-form');
+const employeeErrorMessage = document.getElementById('employee-error-message');
+
+employeeSignupForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // Get form data
+    const fullName = document.getElementById('full-name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('employee-password').value;
+    const confirmPassword = document.getElementById('employee-confirm-password').value;
+    
+    // Validate passwords match
+    if (password !== confirmPassword) {
+        employeeErrorMessage.textContent = 'Passwords do not match';
+        return;
+    }
+    
+    // Clear previous error messages
+    employeeErrorMessage.textContent = '';
+    
+    try {
+        const response = await fetch(`${API_URL}/api/register/employee`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                full_name: fullName,
+                email: email,
+                password: password,
+                confirm_password: confirmPassword
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+            throw new Error(data.detail || 'Registration failed');
+        }
+        
+        // Registration successful - redirect to signin
+        alert('Registration successful! Please sign in.');
+        window.location.href = 'signin.html';
+        
+    } catch (error) {
+        employeeErrorMessage.textContent = error.message;
+    }
 });

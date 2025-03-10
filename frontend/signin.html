@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up - JD - CV ANALYSER</title>
+    <title>Sign In - JD - CV ANALYSER</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="signup.css">
 </head>
@@ -32,29 +32,31 @@
 
             <div class="forms-container">
                 <!-- Employer Form -->
-                <form class="signup-form employer-form active">
+                <form id="employer-signin-form" class="signup-form employer-form active">
                     <h1>Find your best employees</h1>
-                    <input type="text" placeholder="Company Name" required>
-                    <input type="email" placeholder="Business Email" required>
-                    <input type="password" placeholder="Password" required>
+                    <input type="email" id="employer-email" name="username" placeholder="Business Email" required>
+                    <input type="password" id="employer-password" name="password" placeholder="Password" required>
+                    <input type="hidden" id="employer-user-type" name="user_type" value="employer">
+                    <div id="employer-error-message" class="error-message"></div>
                     <button type="submit">Sign In</button>
                     <p class="login-link">Don't have an account? <a href="signup.html">Signup</a></p>
                 </form>
 
                 <!-- Employee Form -->
-                <form class="signup-form employee-form">
+                <form id="employee-signin-form" class="signup-form employee-form">
                     <h1>Find your dream job</h1>
-                    <input type="text" placeholder="Full Name" required>
-                    <input type="email" placeholder="Email Address" required>
-                    <input type="password" placeholder="Password" required>
+                    <input type="email" id="employee-email" name="username" placeholder="Email Address" required>
+                    <input type="password" id="employee-password" name="password" placeholder="Password" required>
+                    <input type="hidden" id="employee-user-type" name="user_type" value="employee">
+                    <div id="employee-error-message" class="error-message"></div>
                     <button type="submit">Sign In</button>
-                    <p class="login-link">Already have an account? <a href="signup.html">Signup</a></p>
+                    <p class="login-link">Don't have an account? <a href="signup.html">Signup</a></p>
                 </form>
             </div>
         </div>
     </main>
 
-    <script src="signup.js"></script>
+    <script src="signin.js"></script>
 </body>
 
 </html>

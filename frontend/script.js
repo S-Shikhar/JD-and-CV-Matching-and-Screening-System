@@ -1,3 +1,6 @@
+// Base URL for API calls
+const BASE_URL = 'https://ats-eureka-ec04bc99ad36.herokuapp.com/api';
+
 // File Upload Handling
 document.addEventListener('DOMContentLoaded', () => {
     // Smooth scrolling for navigation links
@@ -20,23 +23,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const cvUploadArea = document.getElementById('cvUploadArea');
     const jdFileInput = document.getElementById('jdFileInput');
     const cvFileInput = document.getElementById('cvFileInput');
-    const scoreButton = document.getElementById('seeScore');
-    const trialsLeftElement = document.getElementById('trialsLeft');
+    const analyzeButton = document.getElementById('seeScore');
+    const trialsLeftSpan = document.getElementById('trialsLeft');
     
     let jdFile = null;
     let cvFile = null;
 
     // Initialize trials count from localStorage or set to 3 if not exists
     let trialsLeft = parseInt(localStorage.getItem('trialsLeft')) || 3;
-    trialsLeftElement.textContent = trialsLeft;
+    trialsLeftSpan.textContent = trialsLeft;
 
     // Check if trials are exhausted and disable upload areas
     function checkTrialsAndUpdateUI() {
         if (trialsLeft <= 0) {
             jdUploadArea.classList.add('disabled');
             cvUploadArea.classList.add('disabled');
-            scoreButton.disabled = true;
-            trialsLeftElement.parentElement.textContent = 'No trials left. Please sign up to continue.';
+            analyzeButton.disabled = true;
+            trialsLeftSpan.parentElement.textContent = 'No trials left. Please sign up to continue.';
             
             // Remove event listeners when trials are exhausted
             jdUploadArea.removeEventListener('click', handleJdClick);
@@ -81,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Enable score button if both files are uploaded
-        scoreButton.disabled = !(jdFile && cvFile);
+        analyzeButton.disabled = !(jdFile && cvFile);
         return true;
     }
 
@@ -144,53 +147,103 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Score button click handler
-    scoreButton.addEventListener('click', async () => {
+    analyzeButton.addEventListener('click', async () => {
         if (!jdFile || !cvFile) return;
 
         try {
-            // Create FormData and append files
+            analyzeButton.disabled = true;
+            analyzeButton.textContent = 'Analyzing...';
+
             const formData = new FormData();
-            formData.append('jobDescription', jdFile);
-            formData.append('resume', cvFile);
+            formData.append('file', cvFile);
+            formData.append('jd_file', jdFile);
 
-            // Show loading state
-            scoreButton.disabled = true;
-            scoreButton.textContent = 'Analyzing...';
-
-            // Send files to backend
-            const response = await fetch('/api/analyze', {
+            const response = await fetch(`${BASE_URL}/demo`, {
                 method: 'POST',
-                body: formData
+                body: formData,
+                headers: {
+                    'Accept': 'application/json',
+                }
             });
 
-            if (!response.ok) throw new Error('Analysis failed');
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
 
             const result = await response.json();
             
-            // Decrease trials count and update localStorage
-            trialsLeft--;
-            localStorage.setItem('trialsLeft', trialsLeft);
-            
-            // Update UI
-            if (trialsLeft > 0) {
-                trialsLeftElement.textContent = trialsLeft;
+            // Update trials left
+            if (result.rate_limit) {
+                trialsLeftSpan.textContent = result.rate_limit.remaining_requests;
+                localStorage.setItem('trialsLeft', result.rate_limit.remaining_requests);
             }
-            
-            // Check if trials are exhausted
-            checkTrialsAndUpdateUI();
 
-            // Navigate to results page or show modal with results
-            window.location.href = `/results?id=${result.analysisId}`;
+            // Show results modal
+            showResultsModal(result);
 
         } catch (error) {
             console.error('Error:', error);
             alert('An error occurred during analysis. Please try again.');
         } finally {
-            scoreButton.disabled = false;
-            scoreButton.textContent = 'See Your Score';
+            analyzeButton.disabled = false;
+            analyzeButton.textContent = 'Analyze';
         }
     });
 
     // Check trials status on page load
     checkTrialsAndUpdateUI();
-}); 
+});
+
+function showResultsModal(result) {
+    const modal = document.createElement('div');
+    modal.className = 'analysis-modal';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="modal-header">
+                <h2>Analysis Results</h2>
+                <p class="modal-subtitle">Here's how your CV matches with the job description</p>
+            </div>
+            <div class="score-section">
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <span class="score-number">${result['JD-Match']}%</span>
+                        <span class="score-label">Match Score</span>
+                    </div>
+                </div>
+            </div>
+            <div class="results-section">
+                <div class="result-card">
+                    <h3>Profile Summary</h3>
+                    <p>${result['Profile Summary']}</p>
+                </div>
+                
+                <div class="result-card">
+                    <h3>Missing Skills</h3>
+                    <ul class="skills-list">
+                        ${result['Missing Skills'].length > 0 
+                            ? result['Missing Skills'].map(skill => `<li>${skill}</li>`).join('')
+                            : '<li class="no-skills">No major skill gaps identified</li>'
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="cta-section">
+                <div class="cta-content">
+                    <p>Want more detailed analysis and unlimited matches?</p>
+                    <a href="signup.html" class="btn btn-primary">Sign Up Now</a>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const closeButton = modal.querySelector('.close-button');
+    closeButton.onclick = () => modal.remove();
+
+    window.onclick = (event) => {
+        if (event.target === modal) modal.remove();
+    };
+} 

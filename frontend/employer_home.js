@@ -210,13 +210,53 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
             
+            // Sort candidates by match score (highest to lowest)
+            allCandidateResults.sort((a, b) => {
+                const scoreA = parseFloat(a['JD-Match']) || 0;
+                const scoreB = parseFloat(b['JD-Match']) || 0;
+                return scoreB - scoreA;
+            });
+
+            // Add rank to each candidate
+            allCandidateResults = allCandidateResults.map((result, index) => ({
+                ...result,
+                rank: index + 1
+            }));
+            
             // Display results for each CV
             if (allCandidateResults.length > 0) {
-                // Sort by position (already sorted by the API, but just to be sure)
-                allCandidateResults.sort((a, b) => a.Position - b.Position);
+                // Add summary statistics
+                const summaryDiv = document.createElement('div');
+                summaryDiv.className = 'results-summary';
+                summaryDiv.innerHTML = `
+                    <div class="summary-stats">
+                        <h3><i class="fas fa-chart-line"></i> Analysis Summary</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <div class="stat-details">
+                                    <span class="stat-label">Total CVs Analyzed</span>
+                                    <span class="stat-value">${allCandidateResults.length}</span>
+                                </div>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-trophy"></i>
+                                <div class="stat-details">
+                                    <span class="stat-label">Top Match Score</span>
+                                    <span class="stat-value">${Math.round(parseFloat(allCandidateResults[0]['JD-Match']))}%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                resultsContainer.appendChild(summaryDiv);
                 
+                // Display individual results
                 allCandidateResults.forEach((candidateResult) => {
-                    const resultCard = createResultCard(candidateResult);
+                    const resultCard = createResultCard({
+                        ...candidateResult,
+                        Position: candidateResult.rank // Use the calculated rank
+                    });
                     resultsContainer.appendChild(resultCard);
                 });
                 
@@ -225,6 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Scroll to results
                 resultsSection.scrollIntoView({ behavior: 'smooth' });
+
+                // Modify the display of results to expand the first card
+                setTimeout(() => {
+                    const firstCard = document.querySelector('.result-card');
+                    if (firstCard) {
+                        firstCard.classList.add('expanded');
+                    }
+                }, 100);
             } else {
                 throw new Error('No results were returned. Please try again with fewer CVs.');
             }
@@ -318,6 +366,346 @@ document.addEventListener('DOMContentLoaded', () => {
         // Redirect to signin page
         window.location.href = 'signin.html';
     });
+
+    // Add CSS styles for the cards
+    const styleElement = document.createElement('style');
+    styleElement.textContent = `
+        .results-summary {
+            background: linear-gradient(135deg, #1a1f3c, #2a2f4c);
+            color: #e0e4fc;
+            padding: 32px;
+            border-radius: 20px;
+            margin-bottom: 32px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .summary-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .summary-stats h3 {
+            margin: 0;
+            font-size: 1.75rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e0e4fc;
+        }
+
+        .summary-stats h3 i {
+            font-size: 1.5rem;
+            color: #8b9aff;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 24px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px;
+            background: rgba(139, 154, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 154, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-2px);
+            background: rgba(139, 154, 255, 0.12);
+            border-color: rgba(139, 154, 255, 0.25);
+        }
+
+        .stat-item i {
+            font-size: 1.5rem;
+            color: #8b9aff;
+        }
+
+        .stat-details {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #b4c0ff;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #e0e4fc;
+        }
+
+        #results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .result-card {
+            background: #1a1f3c;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            margin-bottom: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+            border-color: rgba(139, 154, 255, 0.25);
+        }
+        
+        .card-header {
+            padding: 24px;
+            background: linear-gradient(135deg, #1f2649, #1a1f3c);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            color: #e0e4fc;
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h3 i {
+            color: #8b9aff;
+        }
+        
+        .match-badge {
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .match-badge:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.25);
+        }
+
+        .high-match {
+            background: linear-gradient(135deg, #2d8a6b, #3aa17c);
+            color: #e0e4fc;
+        }
+        
+        .medium-match {
+            background: linear-gradient(135deg, #b86e00, #c97800);
+            color: #e0e4fc;
+        }
+        
+        .low-match {
+            background: linear-gradient(135deg, #a13c3c, #b54444);
+            color: #e0e4fc;
+        }
+
+        .card-content {
+            padding: 24px;
+            background: #1a1f3c;
+            color: #e0e4fc;
+        }
+
+        .summary, .detail-item {
+            margin-bottom: 24px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .summary h4, .detail-item h4 {
+            color: #8b9aff;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .summary h4:before, .detail-item h4:before {
+            content: '';
+            display: inline-block;
+            width: 4px;
+            height: 20px;
+            background: #8b9aff;
+            border-radius: 2px;
+        }
+        
+        .summary p {
+            color: #b4c0ff;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .detail-item ul {
+            list-style-type: none;
+            padding-left: 0;
+            margin: 0;
+        }
+        
+        .detail-item ul li {
+            padding: 12px 16px;
+            color: #b4c0ff;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .detail-item ul li:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(139, 154, 255, 0.2);
+        }
+
+        .detail-item ul li:before {
+            content: "•";
+            color: #8b9aff;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .rate-limit-info {
+            margin-top: 24px;
+            padding: 20px;
+            background: rgba(139, 154, 255, 0.08);
+            border-radius: 12px;
+            border: 1px solid rgba(139, 154, 255, 0.15);
+        }
+
+        .rate-limit-info h4 {
+            color: #8b9aff;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .rate-limit-info p {
+            color: #b4c0ff;
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rate-limit-info i {
+            color: #8b9aff;
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card-header {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+
+            .match-badge {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .results-summary {
+                padding: 24px;
+            }
+        }
+
+        .result-card {
+            cursor: pointer;
+        }
+
+        .card-header {
+            cursor: pointer;
+            padding: 20px 24px;
+            background: linear-gradient(135deg, #1f2649, #1a1f3c);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex: 1;
+        }
+
+        .dropdown-icon {
+            margin-left: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-icon i {
+            color: #8b9aff;
+            font-size: 1.2rem;
+        }
+
+        .result-card .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            padding: 0 24px;
+        }
+
+        .result-card.expanded .card-content {
+            max-height: 2000px; /* Adjust this value based on your content */
+            padding: 24px;
+            transition: max-height 0.5s ease-in;
+        }
+
+        .result-card.expanded .dropdown-icon {
+            transform: rotate(180deg);
+        }
+
+        .result-card:not(.expanded) {
+            margin-bottom: 16px;
+        }
+
+        .result-card.expanded {
+            margin-bottom: 24px;
+        }
+
+        .card-header:hover {
+            background: linear-gradient(135deg, #252b54, #1f2447);
+        }
+    `;
+    document.head.appendChild(styleElement);
 });
 
 // Function to create a result card for each CV
@@ -334,9 +722,24 @@ function createResultCard(candidateResult) {
     
     // Create card content
     cardDiv.innerHTML = `
-        <div class="card-header">
-            <h3>${fileName} ${position ? `(Rank: #${position})` : ''}</h3>
-            <div class="match-badge">${matchScore}% Match</div>
+        <div class="card-header" onclick="this.parentElement.classList.toggle('expanded')">
+            <div class="header-content">
+                <h3>
+                    <i class="fas fa-file-alt"></i> 
+                    ${fileName} ${position ? `(Rank: #${position})` : ''}
+                </h3>
+                <div class="match-badge ${
+                    matchScore >= 80 ? 'high-match' : 
+                    matchScore >= 50 ? 'medium-match' : 
+                    'low-match'
+                }">
+                    <i class="fas fa-chart-pie"></i>
+                    ${matchScore}% Match
+                </div>
+            </div>
+            <div class="dropdown-icon">
+                <i class="fas fa-chevron-down"></i>
+            </div>
         </div>
         <div class="card-content">
             <div class="summary">
@@ -351,18 +754,15 @@ function createResultCard(candidateResult) {
                     ${missingSkills.map(skill => `<li>${skill}</li>`).join('')}
                 </ul>
             </div>` : ''}
+            
+            ${candidateResult.rate_limit ? `
+            <div class="rate-limit-info">
+                <h4><i class="fas fa-clock"></i> Usage Information</h4>
+                <p><i class="fas fa-redo-alt"></i> Remaining requests today: ${candidateResult.rate_limit.remaining_requests}/${candidateResult.rate_limit.max_requests}</p>
+                <p><i class="fas fa-hourglass-half"></i> Resets in: ${candidateResult.rate_limit.reset_after_hours} hours</p>
+            </div>` : ''}
         </div>
     `;
-    
-    // Style the match badge based on the score
-    const matchBadge = cardDiv.querySelector('.match-badge');
-    if (matchScore >= 80) {
-        matchBadge.classList.add('high-match');
-    } else if (matchScore >= 50) {
-        matchBadge.classList.add('medium-match');
-    } else {
-        matchBadge.classList.add('low-match');
-    }
     
     return cardDiv;
 } 

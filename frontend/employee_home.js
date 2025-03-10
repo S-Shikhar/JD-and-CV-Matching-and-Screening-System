@@ -124,7 +124,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await analyzeDocuments(jdFile, cvFile);
             displayResults(result);
         } catch (error) {
-            alert('An error occurred during analysis. Please try again.');
+            if (error.message.includes('too many requests')) {
+                alert('You are making requests too quickly. Please wait a moment before trying again.');
+            } else {
+                alert('An error occurred during analysis. Please try again.');
+            }
             console.error('Analysis error:', error);
         } finally {
             // Hide loading spinner
@@ -168,6 +172,9 @@ async function analyzeDocuments(jdFile, cvFile) {
         });
         
         if (!response.ok) {
+            if (response.status === 429) {
+                throw new Error('You have made too many requests. Please wait a moment before trying again.');
+            }
             const errorData = await response.json();
             throw new Error(errorData.detail || 'Failed to analyze documents');
         }
@@ -189,48 +196,37 @@ function displayResults(result) {
     // Show results section
     resultsSection.style.display = 'block';
     
-    // Set match percentage
-    const matchScore = result.match_percentage || 0;
+    // Set match percentage (using JD-Match from API)
+    const matchScore = result['JD-Match'] || 0;
     matchPercentage.textContent = `${matchScore}%`;
     
     // Create analysis content HTML
     let analysisHTML = '';
     
-    // Add match summary
-    analysisHTML += `<h4>Match Summary</h4>`;
-    analysisHTML += `<p>${result.match_summary || 'No summary available.'}</p>`;
-    
-    // Add skills analysis
-    if (result.skills_analysis) {
-        analysisHTML += `<h4>Skills Analysis</h4>`;
-        analysisHTML += `<p>${result.skills_analysis}</p>`;
+    // Add profile summary
+    if (result['Profile Summary']) {
+        analysisHTML += `<h4>Profile Summary</h4>`;
+        analysisHTML += `<p>${result['Profile Summary']}</p>`;
     }
     
-    // Add experience analysis
-    if (result.experience_analysis) {
-        analysisHTML += `<h4>Experience Analysis</h4>`;
-        analysisHTML += `<p>${result.experience_analysis}</p>`;
-    }
-    
-    // Add education analysis
-    if (result.education_analysis) {
-        analysisHTML += `<h4>Education Analysis</h4>`;
-        analysisHTML += `<p>${result.education_analysis}</p>`;
-    }
-    
-    // Add improvement suggestions
-    if (result.improvement_suggestions) {
-        analysisHTML += `<h4>Improvement Suggestions</h4>`;
+    // Add missing skills
+    if (result['Missing Skills'] && result['Missing Skills'].length > 0) {
+        analysisHTML += `<h4>Missing Skills</h4>`;
         analysisHTML += `<ul>`;
-        if (Array.isArray(result.improvement_suggestions)) {
-            result.improvement_suggestions.forEach(suggestion => {
-                analysisHTML += `<li>${suggestion}</li>`;
-            });
-        } else {
-            analysisHTML += `<li>${result.improvement_suggestions}</li>`;
-        }
+        result['Missing Skills'].forEach(skill => {
+            analysisHTML += `<li>${skill}</li>`;
+        });
         analysisHTML += `</ul>`;
     }
+
+    // // Add rate limit information if available
+    // if (result.rate_limit) {
+    //     analysisHTML += `<div class="rate-limit-info" style="margin-top: 20px; padding: 10px; background-color: #f8f9fa; border-radius: 5px;">`;
+    //     analysisHTML += `<h4>Usage Information</h4>`;
+    //     analysisHTML += `<p>Remaining requests today: ${result.rate_limit.remaining_requests}/${result.rate_limit.max_requests}</p>`;
+    //     analysisHTML += `<p>Resets in: ${result.rate_limit.reset_after_hours} hours</p>`;
+    //     analysisHTML += `</div>`;
+    // }
     
     // Set analysis content
     analysisContent.innerHTML = analysisHTML;
